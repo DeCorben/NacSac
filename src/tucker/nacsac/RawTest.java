@@ -1,6 +1,6 @@
 package tucker.nacsac;
 
-public abstract class RawTest {
+public class RawTest {
 	private static boolean pass;
 	private static int testNum;
 	
@@ -26,5 +26,7 @@ public abstract class RawTest {
 		testNum = i;
 	}
 	
-	abstract protected void resetTest();
+	protected void resetTest() {
+		pass = true;
+	}
 }
