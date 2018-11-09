@@ -4,6 +4,7 @@ public class RunNac extends RawTest
 {
 	private static Nac fact;
 	private static Stack stack;
+	private static Sac sac;
 	
 	public static void main(String[] args)
 	{
@@ -12,21 +13,72 @@ public class RunNac extends RawTest
 	
 	public RunNac() {
 		setTest(1);
-		resetTest();
 		phaseOne();
 		phaseTwo();
+		phaseThree();
+		//needs coverage update
+		phaseFour();
 	}
 	
 	private void phaseFour() {
-		//Phase Four: links
+		//Phase Four: throughput adds for Sac
 	}
 	
 	private void phaseThree() {
-		//Phase Three: Sac
+		startPhase("Sac");
+		//Sac.equals
+		sac = new Sac(new String[] {"lorem","dolor","amet"});
+		check(new Sac(new String[] {"lorem","dolor","amet"}).equals(sac));
+		test();
+		
+		//Sac.add
+		sac =  new Sac();
+		sac.add("lorem");
+		check(new Sac(new String[] {"lorem"}).equals(sac));
+		test();
+		
+		//Sac.get
+		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
+				new Nac("dolor","string","sit"),
+				new Nac("amet","string","consectetuer")});
+		sac = new Sac(new String[] {"amet"});
+		check(new Nac("amet","string","consectetuer").equals(sac.get("amet")));
+		test();
+		
+		//Sac.remove
+		sac = new Sac(new String[] {"lorem","dolor"});
+		sac.remove("dolor");
+		check(new Sac(new String[] {"lorem"}).equals(sac));
+		test();
+		
+		//Sac.update
+		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
+				new Nac("dolor","string","sit"),
+				new Nac("amet","string","consectetuer")});
+		sac = new Sac(new String[] {"lorem","dolor","amet"});
+		sac.update(new Nac("dolor","number","3.1419"));
+		check(new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
+				new Nac("dolor","number","3.1419"),
+				new Nac("amet","string","consectetuer")}).equals(stack));
+		test();
+		
+		//Sac.count
+		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
+				new Nac("dolor","string","sit"),
+				new Nac("amet","string","consectetuer")});
+		sac = new Sac();
+		check(sac.count() == 0);
+		sac.add("lorem");
+		sac.add("dolor");
+		sac.add("amet");
+		check(sac.count() == 3);
+		sac.remove("amet");
+		check(sac.count() == 2);
+		test();
 	}
 
 	private void phaseTwo() {
-		//Phase Two: Stack
+		startPhase("Stack");
 		//Stack.equals
 		stack =  new Stack(new Nac[] {new Nac("one","string","lorem"),
 				new Nac("two","number","3.1419"),
@@ -71,7 +123,7 @@ public class RunNac extends RawTest
 	}
 	
 	private void phaseOne() {
-		//Phase One: Nac
+		startPhase("Nac");
 		//Nac equals
 		fact = new Nac();
 		fact.setName("lorem");
@@ -93,5 +145,6 @@ public class RunNac extends RawTest
 		super.resetTest();
 		fact = null;
 		stack = null;
+		sac = null;
 	}
 }

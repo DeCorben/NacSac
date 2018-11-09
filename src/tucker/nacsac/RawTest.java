@@ -18,7 +18,6 @@ public class RawTest {
 		else
 			echo("Test number "+testNum+": failed");
 		testNum++;
-		pass = true;
 		resetTest();
 	}
 	
@@ -28,5 +27,10 @@ public class RawTest {
 	
 	protected void resetTest() {
 		pass = true;
+	}
+	
+	public void startPhase(String p) {
+		resetTest();
+		echo("Begin phase:"+p);
 	}
 }
