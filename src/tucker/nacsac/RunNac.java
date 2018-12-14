@@ -42,11 +42,15 @@ public class RunNac extends RawTest
 		//Sac.equals
 		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
 							  new Nac("dolor","string","sit"),
-							  new Nac("amet","string","consectetuer")});
+							  new Nac("amet","string","consectetuer"),
+							  new Nac("adipiscing","string","maecenas")});
 		sac = new Sac(new String[] {"lorem","dolor","amet"},stack);
 		Sac comp = new Sac(new String[] {"lorem","dolor","amet"},stack);
 		boolean b = sac.equals(comp);
 		check(b);
+		check(!sac.equals("not sac"));
+		check(!sac.equals(new Sac(new String[] {"lorem","dolor"},stack)));
+		check(!sac.equals(new Sac(new String[] {"lorem","dolor","adipiscing"},stack)));
 		test();
 		
 		//Sac.add
@@ -113,6 +117,8 @@ public class RunNac extends RawTest
 				new Nac("two","number","3.1419"),
 				new Nac("ipsum","string","dolor")}).equals(stack));
 		check(!new Stack().equals(stack));
+		check(!stack.equals("not a stack"));
+		check(!stack.equals(new Stack(new Nac[] {new Nac("one","string","lorem"),new Nac("two","number","22/7")})));
 		test();
 		
 		//Stack.readNac
@@ -156,6 +162,11 @@ public class RunNac extends RawTest
 		fact.setType("string");
 		fact.setData("ipsum");
 		check(new Nac("lorem","string","ipsum").equals(fact));
+		check(!fact.equals("not nac"));
+		check(!fact.equals(new Nac("dolor","string","ipsum")));
+		check(!fact.equals(new Nac("lorem","link","ipsum")));
+		check(!fact.equals(new Nac("lorem","string","dolor")));
+	
 		test();
 		
 		//Nac.getXXX

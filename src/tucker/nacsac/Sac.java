@@ -37,7 +37,9 @@ public class Sac {
 	}
 	
 	public Nac get(String n) {
-		return dump.readNac(n);
+		if(bag.contains(n))
+			return dump.readNac(n);
+		return null;
 	}
 	
 	public void remove(String n) {
