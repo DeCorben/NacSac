@@ -31,6 +31,6 @@ public class RawTest {
 	
 	public void startPhase(String p) {
 		resetTest();
-		echo("Begin phase:"+p);
+		echo("Begin phase: "+p);
 	}
 }

@@ -18,44 +18,70 @@ public class RunNac extends RawTest
 		phaseThree();
 		//needs coverage update
 		phaseFour();
+		phaseFive();
+	}
+	
+	private void phaseFive(){
+		//Phase Five: tags for Nac
 	}
 	
 	private void phaseFour() {
 		//Phase Four: throughput adds for Sac
+		startPhase("Sac to Stack add:");
+		//add through Sac
+		stack = new Stack();
+		sac = new Sac();
+		sac.setStack(stack);
+		sac.add(new Nac("lorem","string","ipsum"));
+		check(new Stack(new Nac[]{new Nac("lorem","string","ipsum")}).equals(stack));
+		test();
 	}
 	
 	private void phaseThree() {
 		startPhase("Sac");
 		//Sac.equals
-		sac = new Sac(new String[] {"lorem","dolor","amet"});
-		check(new Sac(new String[] {"lorem","dolor","amet"}).equals(sac));
+		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
+							  new Nac("dolor","string","sit"),
+							  new Nac("amet","string","consectetuer")});
+		sac = new Sac(new String[] {"lorem","dolor","amet"},stack);
+		Sac comp = new Sac(new String[] {"lorem","dolor","amet"},stack);
+		boolean b = sac.equals(comp);
+		check(b);
 		test();
 		
 		//Sac.add
+		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
+							  new Nac("dolor","string","sit"),
+							  new Nac("amet","string","consectetuer")});
 		sac =  new Sac();
 		sac.add("lorem");
-		check(new Sac(new String[] {"lorem"}).equals(sac));
+		check(new Sac(new String[]{"lorem"},stack).equals(sac));
+		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum")});
+		check(new Sac(new String[] {"lorem"},stack).equals(sac));
 		test();
 		
 		//Sac.get
 		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
 				new Nac("dolor","string","sit"),
 				new Nac("amet","string","consectetuer")});
-		sac = new Sac(new String[] {"amet"});
+		sac = new Sac(new String[] {"amet"},stack);
 		check(new Nac("amet","string","consectetuer").equals(sac.get("amet")));
 		test();
 		
 		//Sac.remove
-		sac = new Sac(new String[] {"lorem","dolor"});
+		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
+							  new Nac("dolor","string","sit"),
+							  new Nac("amet","string","consectetuer")});
+		sac = new Sac(new String[] {"lorem","dolor"},stack);
 		sac.remove("dolor");
-		check(new Sac(new String[] {"lorem"}).equals(sac));
+		check(new Sac(new String[] {"lorem"},stack).equals(sac));
 		test();
 		
 		//Sac.update
 		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
 				new Nac("dolor","string","sit"),
 				new Nac("amet","string","consectetuer")});
-		sac = new Sac(new String[] {"lorem","dolor","amet"});
+		sac = new Sac(new String[] {"lorem","dolor","amet"},stack);
 		sac.update(new Nac("dolor","number","3.1419"));
 		check(new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
 				new Nac("dolor","number","3.1419"),
