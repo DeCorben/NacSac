@@ -1,7 +1,7 @@
-package tucker.nacsac;
+package com.blackmanatee.nacsac;
 
 import java.util.ArrayList;
-import static tucker.nacsac.RawTest.echo;
+import static com.blackmanatee.rawtest.RawTest.echo;
 
 public class Sac {
 	private ArrayList<String> bag;

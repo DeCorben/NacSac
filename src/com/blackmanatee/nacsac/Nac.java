@@ -1,4 +1,4 @@
-package tucker.nacsac;
+package com.blackmanatee.nacsac;
 
 public class Nac{
 	private String name,type,data;

@@ -1,4 +1,4 @@
-package tucker.nacsac;
+package com.blackmanatee.nacsac;
 
 import java.util.HashMap;
 
