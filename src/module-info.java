@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author DeCorben
- *
- */
-module nacsac {
-}
