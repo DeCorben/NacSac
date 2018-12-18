@@ -1,6 +1,4 @@
-import com.blackmanatee.nacsac.Nac;
-import com.blackmanatee.nacsac.Sac;
-import com.blackmanatee.nacsac.Stack;
+import com.blackmanatee.nacsac.*;
 import com.blackmanatee.rawtest.*;
 
 public class RunNac extends RawTest
@@ -19,13 +17,38 @@ public class RunNac extends RawTest
 		phaseOne();
 		phaseTwo();
 		phaseThree();
-		//needs coverage update
 		phaseFour();
 		phaseFive();
 	}
 	
 	private void phaseFive(){
 		//Phase Five: tags for Nac
+		startPhase("TagNac:");
+		//equals TagNac
+		fact= new TagNac("lorem","string","ipsum",new String[]{"dolor","sit"});
+		check(new TagNac("lorem","string","ipsum",new String[]{"dolor","sit"}).equals(fact));
+		check(!new TagNac().equals(fact));
+		check(!fact.equals(new TagNac("lorem","string","amet",new String[]{"dolor","sit"})));
+		check(!fact.equals(new TagNac("lorem","string","ipsum",new String[]{"dolor","sit","amet"})));
+		check(!fact.equals(new TagNac("lorem","string","ipsum",new String[]{"dolor","amet"})));
+		check(!fact.equals("Not Tagnac"));
+		test();
+		
+		//addTag
+		fact = new TagNac();
+		((TagNac)fact).addTag("lorem");
+		check(new TagNac(new String[]{"lorem"}).equals(fact));
+		((TagNac)fact).addTag("lorem");
+		check(new TagNac(new String[]{"lorem"}).equals(fact));
+		test();
+		
+		//removeTag
+		fact = new TagNac(new String[]{"lorem","ipsum"});
+		((TagNac)fact).removeTag("lorem");
+		check(new TagNac(new String[]{"ipsum"}).equals(fact));
+		((TagNac)fact).removeTag("ipsum");
+		check(new TagNac().equals(fact));
+		test();
 	}
 	
 	private void phaseFour() {

@@ -57,21 +57,21 @@ public class Sac {
 	@Override
 	public boolean equals(Object o){
 		if(!(o instanceof Sac)){
-			echo(o+":Not Sac");
+			//echo(o+":Not Sac");
 			return false;
 		}
 		Sac b = (Sac)o;
 		if(bag.size() != b.count()){
-			echo("Count mismatch");
+			//echo("Count mismatch");
 			return false;
 		}
 		for(String n:bag){
 			Nac i = b.get(n);
 			if(i == null || !n.equals(i.getName())){
-				if(i == null)
+				/*if(i == null)
 					echo("Nac not found");
 				else
-					echo("Nac mismatch");
+					echo("Nac mismatch");*/
 				return false;
 			}
 		}
