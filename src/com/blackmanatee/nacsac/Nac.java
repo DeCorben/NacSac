@@ -19,20 +19,20 @@ public class Nac{
 	@Override
 	public boolean equals(Object o) {
 		if(!(o instanceof Nac)){
-			echo("Not a Nac");
+			echo("Not a Nac",1);
 			return false;
 		}
 		Nac test = (Nac)o;
 		if(!name.equals(test.getName())){
-			echo("Unmatched name");
+			echo("Unmatched name",1);
 			return false;
 		}
 		if(!type.equals(test.getType())){
-			echo("Unmatched type");
+			echo("Unmatched type",1);
 			return false;
 		}
 		if(!data.equals(test.getData())){
-			echo("Unmatched data:"+data+"]["+test.getData());
+			echo("Unmatched data:"+data+"]["+test.getData(),1);
 			return false;
 		}
 		return true;

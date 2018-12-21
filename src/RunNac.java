@@ -14,6 +14,7 @@ public class RunNac extends RawTest
 	}
 	
 	public RunNac() {
+		//threshold = 2;
 		setTest(1);
 		phaseOne();
 		phaseTwo();
@@ -58,7 +59,7 @@ public class RunNac extends RawTest
 			new Nac("dolor","string","sit")
 		});
 		check(new Sac(new String[]{"lorem","dolor"},stack).equals(new Sac("lorem;dolor",stack)));
-		//check(new Sac("amet",new String[]{"lorem","dolor"},stack).equals(new Sac("amet","lorem;dolor",stack)));
+		check(new Sac("amet",new String[]{"lorem","dolor"},stack).equals(new Sac("amet","lorem;dolor",stack)));
 		test();
 	}
 	

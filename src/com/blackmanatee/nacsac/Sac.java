@@ -19,7 +19,7 @@ public class Sac extends TagNac{
 		bag = new ArrayList<>();
 		dump = t;
 		for(String i:s){
-			bag.add(i);
+			add(i);
 		}
 	}
 	
@@ -30,7 +30,7 @@ public class Sac extends TagNac{
 		bag = new ArrayList<>();
 		dump = t;
 		for(String i:s){
-			bag.add(i);
+			add(i);
 		}
 	}
 	
@@ -55,6 +55,14 @@ public class Sac extends TagNac{
 		}
 	}
 	
+	private void updateData() {
+		String d = "";
+		for(String n:bag){
+			d += ";"+n;
+		}
+		super.setData(d.substring(1));
+	}
+	
 	public void setStack(Stack s){
 		dump = s;
 	}
@@ -62,14 +70,18 @@ public class Sac extends TagNac{
 	public void add(String n) {
 		if((!bag.contains(n))
 			&& dump != null
-			&& dump.readNac(n) != null)
+			&& dump.readNac(n) != null) {
 			bag.add(n);
+			updateData();
+		}
 	}
 	
 	public void add(Nac n){
-		if(!bag.contains(n.getName()))
+		if(!bag.contains(n.getName())) {
 			dump.createNac(n);
 			bag.add(n.getName());
+			updateData();
+		}
 	}
 	
 	public Nac get(String n) {
@@ -80,10 +92,12 @@ public class Sac extends TagNac{
 	
 	public void remove(String n) {
 		bag.remove(n);
+		updateData();
 	}
 	
 	public void update(Nac n) {
 		dump.updateNac(n);
+		updateData();
 	}
 	
 	public int count() {
@@ -93,7 +107,7 @@ public class Sac extends TagNac{
 	@Override
 	public boolean equals(Object o){
 		if(!(o instanceof Sac)){
-			echo(o+":Not Sac");
+			echo(o+":Not Sac",1);
 			return false;
 		}
 		Sac b = (Sac)o;
@@ -112,16 +126,6 @@ public class Sac extends TagNac{
 //			}
 //		}
 		return super.equals(o);
-	}
-
-	@Override
-	public String getData()
-	{
-		String d = "";
-		for(String n:bag){
-			d += ";"+n;
-		}
-		return d.substring(1);
 	}
 
 	@Override

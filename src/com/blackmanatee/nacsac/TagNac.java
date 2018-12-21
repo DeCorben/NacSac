@@ -63,17 +63,17 @@ public class TagNac extends Nac{
 	public boolean equals(Object o)
 	{
 		if(!(o instanceof TagNac)){
-			echo("Not a TagNac");
+			echo("Not a TagNac",1);
 			return false;
 		}
 		TagNac c = (TagNac)o;
 		if(c.tagCount() != tags.size()){
-			echo("Tag array size unmatched");
+			echo("Tag array size unmatched",1);
 			return false;
 		}
 		for(String t:tags){
 			if(!c.hasTag(t)){
-				echo("Unmatched tag");
+				echo("Unmatched tag",1);
 				return false;
 			}
 		}
