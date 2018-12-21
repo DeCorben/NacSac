@@ -1,4 +1,5 @@
 package com.blackmanatee.nacsac;
+import static com.blackmanatee.rawtest.RawTest.echo;
 
 public class Nac{
 	private String name,type,data;
@@ -17,15 +18,23 @@ public class Nac{
 	
 	@Override
 	public boolean equals(Object o) {
-		if(!(o instanceof Nac))
+		if(!(o instanceof Nac)){
+			echo("Not a Nac");
 			return false;
+		}
 		Nac test = (Nac)o;
-		if(!name.equals(test.getName()))
+		if(!name.equals(test.getName())){
+			echo("Unmatched name");
 			return false;
-		if(!type.equals(test.getType()))
+		}
+		if(!type.equals(test.getType())){
+			echo("Unmatched type");
 			return false;
-		if(!data.equals(test.getData()))
+		}
+		if(!data.equals(test.getData())){
+			echo("Unmatched data:"+data+"]["+test.getData());
 			return false;
+		}
 		return true;
 	}
 

@@ -1,5 +1,6 @@
 package com.blackmanatee.nacsac;
 import java.util.*;
+import static com.blackmanatee.rawtest.RawTest.echo;
 
 public class TagNac extends Nac{
 	private ArrayList<String> tags;
@@ -25,6 +26,22 @@ public class TagNac extends Nac{
 		}
 	}
 	
+	public TagNac(String tl){
+		super();
+		tags = new ArrayList<>();
+		for(String t:tl.split(";")){
+			addTag(t);
+		}
+	}
+	
+	public TagNac(String n,String t,String d,String tl){
+		super(n,t,d);
+		tags = new ArrayList<>();
+		for(String s:tl.split(";")){
+			addTag(s);
+		}
+	}
+	
 	public void addTag(String t){
 		if(!tags.contains(t))
 			tags.add(t);
@@ -45,14 +62,20 @@ public class TagNac extends Nac{
 	@Override
 	public boolean equals(Object o)
 	{
-		if(!(o instanceof TagNac))
+		if(!(o instanceof TagNac)){
+			echo("Not a TagNac");
 			return false;
+		}
 		TagNac c = (TagNac)o;
-		if(c.tagCount() != tags.size())
+		if(c.tagCount() != tags.size()){
+			echo("Tag array size unmatched");
 			return false;
+		}
 		for(String t:tags){
-			if(!c.hasTag(t))
+			if(!c.hasTag(t)){
+				echo("Unmatched tag");
 				return false;
+			}
 		}
 		return super.equals(o);
 	}

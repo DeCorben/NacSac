@@ -1,5 +1,6 @@
 import com.blackmanatee.nacsac.*;
 import com.blackmanatee.rawtest.*;
+import java.io.*;
 
 public class RunNac extends RawTest
 {
@@ -19,6 +20,46 @@ public class RunNac extends RawTest
 		phaseThree();
 		phaseFour();
 		phaseFive();
+		phaseSix();
+		phaseSeven();
+	}
+	
+	//phase eight:JSON?
+	
+	private void phaseEight(){
+		//refine stackless Sac functioning
+	}
+	
+	private void phaseSeven(){
+		//Phase: Sac to inherit TagNac
+		startPhase("Nac based Sac:");
+		//new equals
+		stack= new Stack();
+		stack.createNac(new TagNac("lorem","string","ipsum",new String[]{"test"}));
+		stack.createNac(new TagNac("dolor","string","sit",new String[]{"test"}));
+		stack.createNac(new Sac("amet",new String[]{"lorem","dolor"},stack));
+		check(new Sac("amet",new String[]{"lorem","dolor"},stack).equals(stack.readNac("amet")));
+		stack.createNac(new TagNac("consectetuer","string","maecenas",new String[]{}));
+		check(!new Sac(new String[]{"lorem","dolor"},stack).equals(stack.readNac("amet")));
+		check(!new Sac("amet",new String[]{"lorem","consecteuer"},stack).equals(stack.readNac("amet")));
+		test();
+	}
+	
+	private void phaseSix(){
+		//phase: splitable Strings as alternative to array in constructors
+		startPhase("splitable String constructors");
+		//TagNac
+		check(new TagNac("lorem","string","ipsum",new String[]{"dolor","sit"}).equals(new TagNac("lorem","string","ipsum","dolor;sit")));
+		check(new TagNac(new String[]{"lorem","ipsum"}).equals(new TagNac("lorem;ipsum")));
+		test();
+		//Sac
+		stack = new Stack(new Nac[]{
+			new Nac("lorem","string","ipsum"),
+			new Nac("dolor","string","sit")
+		});
+		check(new Sac(new String[]{"lorem","dolor"},stack).equals(new Sac("lorem;dolor",stack)));
+		//check(new Sac("amet",new String[]{"lorem","dolor"},stack).equals(new Sac("amet","lorem;dolor",stack)));
+		test();
 	}
 	
 	private void phaseFive(){

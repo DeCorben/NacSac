@@ -3,19 +3,55 @@ package com.blackmanatee.nacsac;
 import java.util.ArrayList;
 import static com.blackmanatee.rawtest.RawTest.echo;
 
-public class Sac {
+public class Sac extends TagNac{
 	private ArrayList<String> bag;
 	private static Stack dump;
 
 	public Sac() {
+		super();
+		setType("sac");
 		bag = new ArrayList<>();
 	}
 	
 	public Sac(String[] s,Stack t) {
+		super();
+		setType("sac");
 		bag = new ArrayList<>();
 		dump = t;
 		for(String i:s){
 			bag.add(i);
+		}
+	}
+	
+	public Sac(String n,String[] s,Stack t){
+		super();
+		setName(n);
+		setType("sac");
+		bag = new ArrayList<>();
+		dump = t;
+		for(String i:s){
+			bag.add(i);
+		}
+	}
+	
+	public Sac(String nl,Stack t){
+		super();
+		setType("sac");
+		bag = new ArrayList<>();
+		dump = t;
+		for(String s:nl.split(";")){
+			add(s);
+		}
+	}
+	
+	public Sac(String n,String nl,Stack t){
+		super();
+		setName(n);
+		setType("sac");
+		bag = new ArrayList<>();
+		dump = t;
+		for(String s:nl.split(";")){
+			add(s);
 		}
 	}
 	
@@ -57,24 +93,42 @@ public class Sac {
 	@Override
 	public boolean equals(Object o){
 		if(!(o instanceof Sac)){
-			//echo(o+":Not Sac");
+			echo(o+":Not Sac");
 			return false;
 		}
 		Sac b = (Sac)o;
-		if(bag.size() != b.count()){
-			//echo("Count mismatch");
-			return false;
-		}
+//		if(bag.size() != b.count()){
+//			//echo("Count mismatch");
+//			return false;
+//		}
+//		for(String n:bag){
+//			Nac i = b.get(n);
+//			if(i == null || !n.equals(i.getName())){
+//				/*if(i == null)
+//					echo("Nac not found");
+//				else
+//					echo("Nac mismatch");*/
+//				return false;
+//			}
+//		}
+		return super.equals(o);
+	}
+
+	@Override
+	public String getData()
+	{
+		String d = "";
 		for(String n:bag){
-			Nac i = b.get(n);
-			if(i == null || !n.equals(i.getName())){
-				/*if(i == null)
-					echo("Nac not found");
-				else
-					echo("Nac mismatch");*/
-				return false;
-			}
+			d += ";"+n;
 		}
-		return true;
+		return d.substring(1);
+	}
+
+	@Override
+	public void setData(String data)
+	{
+		for(String s:data.split(";")){
+			add(s);
+		}
 	}
 }
