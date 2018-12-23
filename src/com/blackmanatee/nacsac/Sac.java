@@ -55,6 +55,25 @@ public class Sac extends TagNac{
 		}
 	}
 	
+	public Sac(Nac[] n){
+		super();
+		setType("sac");
+		bag = new ArrayList<>();
+		for(Nac z:n){
+			add(z);
+		}
+	}
+	
+	public Sac(String d,Nac[] n){
+		super();
+		setName(d);
+		setType("sac");
+		bag = new ArrayList<>();
+		for(Nac z:n){
+			add(z);
+		}
+	}
+	
 	private void updateData() {
 		String d = "";
 		for(String n:bag){
@@ -68,10 +87,14 @@ public class Sac extends TagNac{
 	}
 	
 	public void add(String n) {
-		if((!bag.contains(n))
-			&& dump != null
-			&& dump.readNac(n) != null) {
-			bag.add(n);
+		if((!bag.contains(n)){
+			if(dump != null){
+				if(dump.readNac(n) != null)
+					bag.add(n);
+			}
+			else{
+				
+			}
 			updateData();
 		}
 	}
@@ -110,21 +133,7 @@ public class Sac extends TagNac{
 			echo(o+":Not Sac",1);
 			return false;
 		}
-		Sac b = (Sac)o;
-//		if(bag.size() != b.count()){
-//			//echo("Count mismatch");
-//			return false;
-//		}
-//		for(String n:bag){
-//			Nac i = b.get(n);
-//			if(i == null || !n.equals(i.getName())){
-//				/*if(i == null)
-//					echo("Nac not found");
-//				else
-//					echo("Nac mismatch");*/
-//				return false;
-//			}
-//		}
+		//Sac b = (Sac)o;
 		return super.equals(o);
 	}
 
