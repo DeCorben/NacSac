@@ -24,7 +24,7 @@ public class RunNac extends RawTest
 		phaseSix();
 		phaseSeven();
 		phaseEight();
-		phaseNine();
+		//phaseNine();
 	}
 	
 	private void phaseNine(){
@@ -101,10 +101,21 @@ public class RunNac extends RawTest
 		//phase nine:JSON
 		startPhase("JSON string output");
 		//Nac
-		check("{\"}".equals(new Nac("lorem","string","ipsum").toString()));
+		check("{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"}".equals(new Nac("lorem","string","ipsum").toString()));
+		test();
 		//Stack
-		
+		check("{\"pile\":[{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}]}".equals(new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString()));
+		test();
 		//Sac
+		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")});
+		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"lorem;dolor;amet\"}".equals(new Sac("scrot","lorem;dolor;amet",stack)));
+		test();
+		//stackless Sac
+		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":[{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}]}".equals(new Sac("scrot",new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString()));
+		test();
+		//TagNac
+		check("{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\",\"tags\":\"dolor;sit;amet\"}".equals(new TagNac("lorem","string","ipsum","dolor;sit;amet").toString()));
+		test();
 	}
 	
 	private void phaseSeven(){

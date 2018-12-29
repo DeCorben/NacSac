@@ -87,13 +87,14 @@ public class Sac extends TagNac{
 	}
 	
 	public void add(String n) {
-		if((!bag.contains(n)){
+		if((!bag.contains(n))){
 			if(dump != null){
 				if(dump.readNac(n) != null)
 					bag.add(n);
 			}
 			else{
-				
+				//iffy choice here
+				bag.add(n);
 			}
 			updateData();
 		}
@@ -101,8 +102,13 @@ public class Sac extends TagNac{
 	
 	public void add(Nac n){
 		if(!bag.contains(n.getName())) {
-			dump.createNac(n);
-			bag.add(n.getName());
+			if(dump != null){
+				dump.createNac(n);
+				bag.add(n.getName());
+			}
+			else{
+				bag.add(n.toString());
+			}
 			updateData();
 		}
 	}

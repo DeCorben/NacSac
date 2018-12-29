@@ -51,4 +51,15 @@ public class Stack {
 		}
 		return true;
 	}
+
+	@Override
+	public String toString()
+	{
+		String o = "";
+		for(String n:pile.keySet()){
+			o += ","+pile.get(n).toString();
+		}
+		return "{\"pile\":["+o.substring(1)+"]}";
+	}
+	
 }
