@@ -1,6 +1,7 @@
 package com.blackmanatee.nacsac;
 import java.util.*;
 import static com.blackmanatee.rawtest.RawTest.echo;
+import org.json.*;
 
 public class TagNac extends Nac{
 	private ArrayList<String> tags;
@@ -29,9 +30,24 @@ public class TagNac extends Nac{
 	public TagNac(String tl){
 		super();
 		tags = new ArrayList<>();
-		for(String t:tl.split(";")){
-			addTag(t);
+		String list = tl;
+		//determine if tl is a taglist or Json string:
+		if(tl.startsWith("{")){
+			try{
+				JSONObject json = new JSONObject(tl);
+				setName(json.getString("name"));
+				setType(json.getString("type"));
+				setData(json.getString("data"));
+				list = json.getString("tags");
+			}
+			catch(JSONException ex){
+				ex.printStackTrace();
+			}
 		}
+		if(list != null && list.length() > 0)
+			for(String t:list.split(";")){
+				addTag(t);
+			}
 	}
 	
 	public TagNac(String n,String t,String d,String tl){
@@ -57,6 +73,20 @@ public class TagNac extends Nac{
 	
 	public int tagCount(){
 		return tags.size();
+	}
+
+	@Override
+	public String toString(){
+		if(tags.size() == 0)
+			return super.toString();
+		else{
+			String sup = super.toString();
+			String ta = "";
+			for(String t:tags){
+				ta += ";"+t;
+			}
+			return sup.substring(0,sup.length()-1)+",\"tags\":\""+ta.substring(1)+"\"}";
+		}
 	}
 
 	@Override

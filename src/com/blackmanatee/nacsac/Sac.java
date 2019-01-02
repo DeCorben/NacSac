@@ -5,7 +5,7 @@ import static com.blackmanatee.rawtest.RawTest.echo;
 
 public class Sac extends TagNac{
 	private ArrayList<String> bag;
-	private static Stack dump;
+	private Stack dump;
 
 	public Sac() {
 		super();
@@ -74,6 +74,14 @@ public class Sac extends TagNac{
 		}
 	}
 	
+	public Sac(String j){
+		super(j);
+		bag = new ArrayList<>();
+		for(String n:getData().split(";")){
+			bag.add(n);
+		}
+	}
+	
 	private void updateData() {
 		String d = "";
 		for(String n:bag){
@@ -103,10 +111,12 @@ public class Sac extends TagNac{
 	public void add(Nac n){
 		if(!bag.contains(n.getName())) {
 			if(dump != null){
+				echo("Dump populated",1);
 				dump.createNac(n);
 				bag.add(n.getName());
 			}
 			else{
+				echo("Stackless add",1);
 				bag.add(n.toString());
 			}
 			updateData();
@@ -125,8 +135,22 @@ public class Sac extends TagNac{
 	}
 	
 	public void update(Nac n) {
-		dump.updateNac(n);
+		if(dump != null)
+			dump.updateNac(n);
+		else{
+			for(String s:bag){
+				Nac e = new Nac(s);
+				if(e.getName().equals(n.getName())){
+					bag.set(bag.indexOf(s),n.toString());
+					break;
+				}
+			}
+		}
 		updateData();
+	}
+	
+	public void update(String j){
+		
 	}
 	
 	public int count() {

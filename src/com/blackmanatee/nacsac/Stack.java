@@ -26,12 +26,20 @@ public class Stack {
 		}
 	}
 	
+	public void createNac(String j){
+		
+	}
+	
 	public Nac readNac(String n) {
 		return pile.get(n);
 	}
 	
 	public void updateNac(Nac n) {
 		pile.put(n.getName(), n);
+	}
+	
+	public void updateNac(String j){
+		
 	}
 	
 	public void deleteNac(String n) {

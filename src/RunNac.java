@@ -14,7 +14,7 @@ public class RunNac extends RawTest
 	}
 	
 	public RunNac() {
-		//threshold = 2;
+		threshold = 2;
 		setTest(1);
 		phaseOne();
 		phaseTwo();
@@ -24,10 +24,15 @@ public class RunNac extends RawTest
 		phaseSix();
 		phaseSeven();
 		phaseEight();
-		//phaseNine();
+		phaseNine();
+		phaseTen();
 	}
 	
-	private void phaseNine(){
+	//JSON Object input/output
+	
+	//merge Sac and merge Stack
+	
+	private void phaseTen(){
 		//refine stackless Sac functioning
 		startPhase("Stackless Sacs:");
 		//Sac.equals
@@ -97,21 +102,66 @@ public class RunNac extends RawTest
 		test();
 	}
 	
+	private void phaseNine(){
+		//JSON input
+		startPhase("JSON String Input");
+		//Nac constructor
+		fact = new Nac("lorem","string","ipsum");
+		check(new Nac(fact.toString()).equals(fact));
+		test();
+		//TagNac Constructor
+		fact = new TagNac("lorem","string","ipsum","dolor;sit");
+		check(new TagNac(fact.toString()).equals(fact));
+		test();
+		//Sac Constructor
+		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),
+							  new Nac("dolor","string","sit")});
+		sac = new Sac("amet","lorem;dolor",stack);
+		check(new Sac(sac.toString()).equals(sac));
+		test();
+		//Stack.add
+		stack = new Stack();
+		stack.createNac(new Nac("lorem","string","ipsum").toString());
+		check(new Stack(new Nac[]{new Nac("lorem","string","ipsum")}).equals(stack));
+		test();
+		//Stack.update
+		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum")});
+		stack.updateNac(new Nac("lorem","string","sit"));
+		check(new Stack(new Nac[]{new Nac("lorem","string","sit")}).equals(stack));
+		test();
+		//Sac.add
+		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum")});
+		sac = new Sac();
+		sac.setStack(stack);
+		sac.add(stack.readNac("lorem").toString());
+		check(new Sac("lorem",stack).equals(sac));
+		test();
+		//Sac.update
+		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum")});
+		sac = new Sac("lorem",stack);
+		sac.update(new Nac("lorem","string","amet").toString());
+		check(new Stack(new Nac[]{new Nac("lorem","string","amet")}).equals(stack));
+	}
+	
 	private void phaseEight(){
-		//phase nine:JSON
+		//JSON out
 		startPhase("JSON string output");
 		//Nac
 		check("{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"}".equals(new Nac("lorem","string","ipsum").toString()));
 		test();
 		//Stack
-		check("{\"pile\":[{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}]}".equals(new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString()));
+		String buf = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString();
+		echo(buf,1);
+		check("{\"pile\":[{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"}]}".equals(buf));
 		test();
 		//Sac
 		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")});
-		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"lorem;dolor;amet\"}".equals(new Sac("scrot","lorem;dolor;amet",stack)));
+		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"lorem;dolor;amet\"}".equals(new Sac("scrot","lorem;dolor;amet",stack).toString()));
 		test();
 		//stackless Sac
-		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":[{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}]}".equals(new Sac("scrot",new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString()));
+		buf = new Sac("scrot",new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString();
+		echo(buf,1);
+		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"};{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"};{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}\"}".equals(buf));
 		test();
 		//TagNac
 		check("{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\",\"tags\":\"dolor;sit;amet\"}".equals(new TagNac("lorem","string","ipsum","dolor;sit;amet").toString()));

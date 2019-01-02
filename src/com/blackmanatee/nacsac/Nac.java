@@ -1,5 +1,6 @@
 package com.blackmanatee.nacsac;
 import static com.blackmanatee.rawtest.RawTest.echo;
+import org.json.*;
 
 public class Nac{
 	private String name,type,data;
@@ -14,6 +15,24 @@ public class Nac{
 		name = n;
 		type = t;
 		data = d;
+	}
+	
+	public Nac(String j){
+		//JSON string parser
+		try
+		{
+			JSONObject json = new JSONObject(j);
+			name = json.getString("name");
+			type = json.getString("type");
+			data = json.getString("data");
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+			name= "";
+			type = "";
+			data = "";
+		}
 	}
 	
 	@Override
