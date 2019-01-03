@@ -30,7 +30,7 @@ public class TagNac extends Nac{
 	public TagNac(String tl){
 		super();
 		tags = new ArrayList<>();
-		String list = tl;
+		String list = "";
 		//determine if tl is a taglist or Json string:
 		if(tl.startsWith("{")){
 			try{
@@ -42,8 +42,12 @@ public class TagNac extends Nac{
 			}
 			catch(JSONException ex){
 				ex.printStackTrace();
+				echo("list:"+list,10);
 			}
 		}
+		else
+			list = tl;
+		//stacked sacs cause this code to think that the data semicolons are for tags
 		if(list != null && list.length() > 0)
 			for(String t:list.split(";")){
 				addTag(t);
@@ -98,7 +102,7 @@ public class TagNac extends Nac{
 		}
 		TagNac c = (TagNac)o;
 		if(c.tagCount() != tags.size()){
-			echo("Tag array size unmatched",1);
+			echo("Tag array size unmatched:"+tags.size()+"]["+c.tagCount(),1);
 			return false;
 		}
 		for(String t:tags){

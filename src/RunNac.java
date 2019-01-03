@@ -14,7 +14,7 @@ public class RunNac extends RawTest
 	}
 	
 	public RunNac() {
-		threshold = 2;
+		threshold = 11;
 		setTest(1);
 		phaseOne();
 		phaseTwo();
@@ -117,6 +117,8 @@ public class RunNac extends RawTest
 		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),
 							  new Nac("dolor","string","sit")});
 		sac = new Sac("amet","lorem;dolor",stack);
+		echo(sac.toString(),1);
+		//this does not equal b/c the JSON input sac will be stackless
 		check(new Sac(sac.toString()).equals(sac));
 		test();
 		//Stack.add
@@ -156,12 +158,14 @@ public class RunNac extends RawTest
 		test();
 		//Sac
 		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")});
-		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"lorem;dolor;amet\"}".equals(new Sac("scrot","lorem;dolor;amet",stack).toString()));
+		buf = new Sac("scrot","lorem;dolor;amet",stack).toString();
+		echo(buf,1);
+		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"lorem;dolor;amet\"}".equals(buf));
 		test();
 		//stackless Sac
 		buf = new Sac("scrot",new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString();
 		echo(buf,1);
-		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"};{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"};{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}\"}".equals(buf));
+		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":[{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}]}".equals(buf));
 		test();
 		//TagNac
 		check("{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\",\"tags\":\"dolor;sit;amet\"}".equals(new TagNac("lorem","string","ipsum","dolor;sit;amet").toString()));
@@ -263,6 +267,7 @@ public class RunNac extends RawTest
 							  new Nac("dolor","string","sit"),
 							  new Nac("amet","string","consectetuer")});
 		sac =  new Sac();
+		sac.setStack(stack);
 		sac.add("lorem");
 		check(new Sac(new String[]{"lorem"},stack).equals(sac));
 		test();

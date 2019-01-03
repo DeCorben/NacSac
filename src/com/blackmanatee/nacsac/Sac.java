@@ -75,19 +75,25 @@ public class Sac extends TagNac{
 	}
 	
 	public Sac(String j){
+		//stacked sacs don't geta stack from this
 		super(j);
-		bag = new ArrayList<>();
-		for(String n:getData().split(";")){
-			bag.add(n);
-		}
 	}
 	
 	private void updateData() {
-		String d = "";
-		for(String n:bag){
-			d += ";"+n;
+		if(dump == null){
+			String buf = "";
+			for(String n:bag){
+				buf += ","+n;
+			}
+			super.setData("["+buf.substring(1)+"]");
 		}
-		super.setData(d.substring(1));
+		else{
+			String d = "";
+			for(String n:bag){
+				d += ";"+n;
+			}
+			super.setData(d.substring(1));
+		}
 	}
 	
 	public void setStack(Stack s){
@@ -95,7 +101,9 @@ public class Sac extends TagNac{
 	}
 	
 	public void add(String n) {
-		if((!bag.contains(n))){
+		if(bag == null)
+			bag = new ArrayList<>();
+		if(!bag.contains(n)){
 			if(dump != null){
 				if(dump.readNac(n) != null)
 					bag.add(n);
@@ -163,15 +171,49 @@ public class Sac extends TagNac{
 			echo(o+":Not Sac",1);
 			return false;
 		}
-		//Sac b = (Sac)o;
 		return super.equals(o);
+	}
+
+	@Override
+	public String getData()
+	{
+		// TODO: Implement this method
+		if(dump != null)
+			return super.getData();
+		String buf = "";
+		for(String n:bag){
+			buf += ","+n;
+		}
+		return "["+buf.substring(1)+"]";
 	}
 
 	@Override
 	public void setData(String data)
 	{
-		for(String s:data.split(";")){
-			add(s);
+		if(data.startsWith("{")){
+			String buf = data;
+			while(buf.length() > 0){
+				if(buf.startsWith(";"))
+					buf = buf.substring(1);
+				String obj = buf.substring(0,buf.indexOf('{'));
+				buf = buf.substring(obj.length());
+				add(obj);
+			}
 		}
+		else{
+			for(String s:data.split(";")){
+				//semicolon splits won't work for nesting
+				//may need to shake up inheritance
+				add(s);
+			}
+		}
+		updateData();
+	}
+
+	@Override
+	public String toString()
+	{
+		String d = dump==null?getData():"\""+getData()+"\"";
+		return "{\"name\":\""+getName()+"\",\"type\":\""+getType()+"\",\"data\":"+d+"}";
 	}
 }
