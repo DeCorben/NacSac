@@ -2,6 +2,7 @@ package com.blackmanatee.nacsac;
 
 import java.util.ArrayList;
 import static com.blackmanatee.rawtest.RawTest.echo;
+import org.json.*;
 
 public class Sac extends TagNac{
 	private ArrayList<String> bag;
@@ -39,8 +40,20 @@ public class Sac extends TagNac{
 		setType("sac");
 		bag = new ArrayList<>();
 		dump = t;
-		for(String s:nl.split(";")){
-			add(s);
+		if(nl.startsWith("{")){
+			try{
+				JSONObject json = new JSONObject(nl);
+				setName(json.getString("name"));
+				setData(json.getString("data"));
+			}
+			catch(JSONException ex){
+				//ex.printStackTrace();
+			}
+		}
+		else{
+			for(String s:nl.split(";")){
+				add(s);
+			}
 		}
 	}
 	
@@ -75,7 +88,7 @@ public class Sac extends TagNac{
 	}
 	
 	public Sac(String j){
-		//stacked sacs don't geta stack from this
+		//stacked sacs don't get a stack from this
 		super(j);
 	}
 	
@@ -103,13 +116,19 @@ public class Sac extends TagNac{
 	public void add(String n) {
 		if(bag == null)
 			bag = new ArrayList<>();
-		if(!bag.contains(n)){
+			String inName = n;
+		if(n.startsWith("{"))
+			inName = new TagNac(n).getName();
+		if(!bag.contains(inName)){
 			if(dump != null){
-				if(dump.readNac(n) != null)
-					bag.add(n);
+				echo("Dump not null",11);
+				if(dump.readNac(inName) != null)
+					bag.add(inName);
+				else
+					echo("Stack read failed",11);
 			}
 			else{
-				//iffy choice here
+				echo("Raw add for stackless",11);
 				bag.add(n);
 			}
 			updateData();
@@ -119,12 +138,12 @@ public class Sac extends TagNac{
 	public void add(Nac n){
 		if(!bag.contains(n.getName())) {
 			if(dump != null){
-				echo("Dump populated",1);
+				echo("Dump populated",7);
 				dump.createNac(n);
 				bag.add(n.getName());
 			}
 			else{
-				echo("Stackless add",1);
+				echo("Stackless add",7);
 				bag.add(n.toString());
 			}
 			updateData();
@@ -132,13 +151,29 @@ public class Sac extends TagNac{
 	}
 	
 	public Nac get(String n) {
-		if(bag.contains(n))
-			return dump.readNac(n);
+		//will fail if n is JSON string and this is a stacked Sac
+		if(bag.contains(n)){
+			if(dump == null)
+				return new TagNac(bag.get(bag.indexOf(n)));
+			else
+				return dump.readNac(n);
+		}
+		for(String i:bag){
+			if(i.startsWith("{\"name\":\""+n+"\""))
+				return new TagNac(i);
+		}
 		return null;
 	}
 	
 	public void remove(String n) {
-		bag.remove(n);
+		if(bag.contains(n))
+			bag.remove(n);
+		else{
+			for(String i:bag){
+				if(i.startsWith("{\"name\":\""+n+"\""))
+					bag.remove(i);
+			}
+		}
 		updateData();
 	}
 	
@@ -158,7 +193,12 @@ public class Sac extends TagNac{
 	}
 	
 	public void update(String j){
-		
+		if(dump != null){
+			dump.updateNac(j);
+			updateData();
+		}
+		else
+			update(new TagNac(j));
 	}
 	
 	public int count() {
@@ -168,16 +208,46 @@ public class Sac extends TagNac{
 	@Override
 	public boolean equals(Object o){
 		if(!(o instanceof Sac)){
-			echo(o+":Not Sac",1);
+			echo(o+":Not Sac",10);
 			return false;
 		}
-		return super.equals(o);
+		Sac b = (Sac)o;
+		if(!getName().equals(b.getName())){
+			echo("Sac name unmatched",10);
+			return false;
+		}
+		if(!getType().equals(b.getType())){
+			echo("Sac type unmatched",10);
+			return false;
+		}
+		if(bag.size() != b.count()){
+			echo("Sac bag count differs",10);
+			return false;
+		}
+		for(String i:bag){
+			Nac n = get(i);
+			if(!n.equals(b.get(n.getName()))){
+				echo("Sac nacs not equal:"+n.getName(),10);
+				return false;
+			}
+		}
+		if(tagCount() != b.tagCount()){
+			echo("Sac tac count differs",10);
+			return false;
+		}
+		echo("Base tag list:"+getTags(),10);
+		for(String t:getTags().split(";")){
+			if(t.length()>0 && !b.hasTag(t)){
+				echo("Sac has no tag:"+t,10);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public String getData()
 	{
-		// TODO: Implement this method
 		if(dump != null)
 			return super.getData();
 		String buf = "";
@@ -215,5 +285,23 @@ public class Sac extends TagNac{
 	{
 		String d = dump==null?getData():"\""+getData()+"\"";
 		return "{\"name\":\""+getName()+"\",\"type\":\""+getType()+"\",\"data\":"+d+"}";
+	}
+	
+	public void merge(Sac m){
+		for(String n:m.nacList()){
+			add(m.get(n));
+		}
+		updateData();
+	}
+	
+	public ArrayList<String> nacList(){
+		ArrayList<String> l = new ArrayList<>();
+		for(String n:bag){
+			if(n.startsWith("{"))
+				l.add(new Nac(n).getName());
+			else
+				l.add(n);
+		}
+		return l;
 	}
 }

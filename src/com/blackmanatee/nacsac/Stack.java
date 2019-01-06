@@ -1,6 +1,8 @@
 package com.blackmanatee.nacsac;
 
 import java.util.HashMap;
+import static com.blackmanatee.rawtest.RawTest.echo;
+import java.util.*;
 
 public class Stack {
 	private HashMap<String,Nac> pile;
@@ -16,6 +18,20 @@ public class Stack {
 		}
 	}
 	
+	public ArrayList<String> nacList(){
+		ArrayList<String> l = new ArrayList<>();
+		for(String n:pile.keySet()){
+			l.add(n);
+		}
+		return l;
+	}
+	
+	public void merge(Stack m){
+		for(String n:m.nacList()){
+			createNac(m.readNac(n));
+		}
+	}
+	
 	public int nacCount() {
 		return pile.size();
 	}
@@ -27,7 +43,7 @@ public class Stack {
 	}
 	
 	public void createNac(String j){
-		
+		createNac(new TagNac(j));
 	}
 	
 	public Nac readNac(String n) {
@@ -39,7 +55,8 @@ public class Stack {
 	}
 	
 	public void updateNac(String j){
-		
+		echo(j,9);
+		updateNac(new TagNac(j));
 	}
 	
 	public void deleteNac(String n) {

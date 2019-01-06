@@ -14,8 +14,9 @@ public class RunNac extends RawTest
 	}
 	
 	public RunNac() {
-		threshold = 11;
-		setTest(1);
+		threshold = 12;
+		phaseEcho = true;
+		//setTest(1);
 		phaseOne();
 		phaseTwo();
 		phaseThree();
@@ -26,35 +27,76 @@ public class RunNac extends RawTest
 		phaseEight();
 		phaseNine();
 		phaseTen();
+		phaseEleven();
 	}
 	
 	//JSON Object input/output
 	
-	//merge Sac and merge Stack
+	private void phaseEleven(){
+		//merge Sac and merge Stack
+		startPhase("Merges:");
+		//Sac.merge
+		stack = new Stack(new Nac[] {new TagNac("lorem","string","ipsum"),
+			new TagNac("dolor","string","sit"),
+			new TagNac("amet","string","consectetuer"),
+			new TagNac("adipiscing","string","elit")
+			});
+		sac = new Sac("lorem;dolor;amet",stack);
+		Sac bee = new Sac("adipiscing",stack);
+		sac.merge(bee);
+		check(new Sac("lorem;dolor;amet;adipiscing",stack).equals(sac));
+		echo("no overlap -> "+pass,11);
+		sac.remove("adipiscing");
+		bee.add("dolor");
+		sac.merge(bee);
+		check(new Sac("lorem;dolor;amet;adipiscing",stack).equals(sac));
+		test();
+		
+		//Stack.merge
+		stack = new Stack(new Nac[] {new TagNac("lorem","string","ipsum"),
+			new TagNac("dolor","string","sit")
+			});
+		Stack cee = new Stack(new Nac[] {new TagNac("lorem","string","ipsum"),
+			new TagNac("amet","string","consectetuer"),
+			new TagNac("adipiscing","string","elit")
+			});
+		stack.merge(cee);
+		check(new Stack(new Nac[] {new TagNac("lorem","string","ipsum"),
+			new TagNac("dolor","string","sit"),
+			new TagNac("amet","string","consectetuer"),
+			new TagNac("adipiscing","string","elit")
+			}).equals(stack));
+		test();
+	}
 	
 	private void phaseTen(){
 		//refine stackless Sac functioning
 		startPhase("Stackless Sacs:");
 		//Sac.equals
-		stack = new Stack(new Nac[] {new Nac("lorem","string","ipsum"),
-			new Nac("dolor","string","sit"),
-			new Nac("amet","string","consectetuer")});
-		sac = new Sac(new Nac[] {new Nac("lorem","string","ipsum"),
-			new Nac("dolor","string","sit"),
-			new Nac("amet","string","consectetuer")});
+		stack = new Stack(new Nac[] {new TagNac("lorem","string","ipsum"),
+			new TagNac("dolor","string","sit"),
+			new TagNac("amet","string","consectetuer")});
+		sac = new Sac(new Nac[] {new TagNac("lorem","string","ipsum"),
+			new TagNac("dolor","string","sit"),
+			new TagNac("amet","string","consectetuer")});
 		Sac comp = new Sac(new Nac[] {new Nac("lorem","string","ipsum"),
-			new Nac("dolor","string","sit"),
-			new Nac("amet","string","consectetuer")});
+			new TagNac("dolor","string","sit"),
+			new TagNac("amet","string","consectetuer")});
 		boolean b = sac.equals(comp);
 		check(b);
+		echo("straight equals -> "+pass,10);
 		check(!sac.equals("not sac"));
+		echo("not equal non-sac -> "+pass,10);
 		check(!sac.equals(new Sac(new Nac[] {new Nac("lorem","string","ipsum"),
-									  new Nac("dolor","string","sit")})));
+			new Nac("dolor","string","sit")})));
+		echo("not same num nacs -> "+pass,10);
 		check(!sac.equals(new Sac(new Nac[] {new Nac("lorem","string","ipsum"),
-									  new Nac("dolor","string","sit"),
-									  new Nac("adipiscing","string","maecenas")})));
+			new Nac("dolor","string","sit"),
+			new Nac("adipiscing","string","maecenas")})));
+		echo("different nacs -> "+pass,10);
 		//should stackless Sac equal stacked w/ identical Nacs? -> yes
 		check(sac.equals(new Sac(new String[] {"lorem","dolor","amet"},stack)));
+		echo("match stacked ->"+pass,10);
 		check(!new Sac("foo",new Nac[]{new Nac("lorem","string","ipsum"),
 						  new Nac("dolor","string","sit"),
 						  new Nac("amet","string","consectetuer")}).equals(sac));
@@ -100,6 +142,17 @@ public class RunNac extends RawTest
 		sac.remove("amet");
 		check(sac.count() == 2);
 		test();
+		
+		//Sac.add(stacked and stackless)
+		stack = new Stack(new Nac[]{new TagNac("lorem","string","ipsum")});
+		sac = new Sac();
+		sac.setStack(stack);
+		String buf = stack.readNac("lorem").toString();
+		echo(buf,10);
+		sac.add(buf);
+		//stackless add to stacked sac
+		check(new Sac("lorem",stack).equals(sac));
+		test();
 	}
 	
 	private void phaseNine(){
@@ -117,9 +170,9 @@ public class RunNac extends RawTest
 		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),
 							  new Nac("dolor","string","sit")});
 		sac = new Sac("amet","lorem;dolor",stack);
-		echo(sac.toString(),1);
+		echo(sac.toString(),9);
 		//this does not equal b/c the JSON input sac will be stackless
-		check(new Sac(sac.toString()).equals(sac));
+		check(new Sac(sac.toString(),stack).equals(sac));
 		test();
 		//Stack.add
 		stack = new Stack();
@@ -131,18 +184,12 @@ public class RunNac extends RawTest
 		stack.updateNac(new Nac("lorem","string","sit"));
 		check(new Stack(new Nac[]{new Nac("lorem","string","sit")}).equals(stack));
 		test();
-		//Sac.add
-		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum")});
-		sac = new Sac();
-		sac.setStack(stack);
-		sac.add(stack.readNac("lorem").toString());
-		check(new Sac("lorem",stack).equals(sac));
-		test();
 		//Sac.update
 		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum")});
 		sac = new Sac("lorem",stack);
 		sac.update(new Nac("lorem","string","amet").toString());
 		check(new Stack(new Nac[]{new Nac("lorem","string","amet")}).equals(stack));
+		test();
 	}
 	
 	private void phaseEight(){
@@ -153,18 +200,18 @@ public class RunNac extends RawTest
 		test();
 		//Stack
 		String buf = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString();
-		echo(buf,1);
+		echo(buf,8);
 		check("{\"pile\":[{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"}]}".equals(buf));
 		test();
 		//Sac
 		stack = new Stack(new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")});
 		buf = new Sac("scrot","lorem;dolor;amet",stack).toString();
-		echo(buf,1);
+		echo(buf,8);
 		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":\"lorem;dolor;amet\"}".equals(buf));
 		test();
 		//stackless Sac
 		buf = new Sac("scrot",new Nac[]{new Nac("lorem","string","ipsum"),new Nac("dolor","string","sit"),new Nac("amet","string","consectetuer")}).toString();
-		echo(buf,1);
+		echo(buf,8);
 		check("{\"name\":\"scrot\",\"type\":\"sac\",\"data\":[{\"name\":\"lorem\",\"type\":\"string\",\"data\":\"ipsum\"},{\"name\":\"dolor\",\"type\":\"string\",\"data\":\"sit\"},{\"name\":\"amet\",\"type\":\"string\",\"data\":\"consectetuer\"}]}".equals(buf));
 		test();
 		//TagNac
@@ -189,7 +236,7 @@ public class RunNac extends RawTest
 	
 	private void phaseSix(){
 		//phase: splitable Strings as alternative to array in constructors
-		startPhase("splitable String constructors");
+		startPhase("splitable String input");
 		//TagNac
 		check(new TagNac("lorem","string","ipsum",new String[]{"dolor","sit"}).equals(new TagNac("lorem","string","ipsum","dolor;sit")));
 		check(new TagNac(new String[]{"lorem","ipsum"}).equals(new TagNac("lorem;ipsum")));
@@ -201,6 +248,11 @@ public class RunNac extends RawTest
 		});
 		check(new Sac(new String[]{"lorem","dolor"},stack).equals(new Sac("lorem;dolor",stack)));
 		check(new Sac("amet",new String[]{"lorem","dolor"},stack).equals(new Sac("amet","lorem;dolor",stack)));
+		test();
+		//TagNac.setTags
+		fact = new TagNac("lorem","string","ipsum","");
+		((TagNac)fact).setTags("dolor;sit");
+		check(new TagNac("lorem","string","ipsum","dolor;sit").equals(fact));
 		test();
 	}
 	

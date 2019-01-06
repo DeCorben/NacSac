@@ -19,6 +19,11 @@ public class TagNac extends Nac{
 		}
 	}
 	
+	public TagNac(String n,String t,String d){
+		super(n,t,d);
+		tags = new ArrayList<>();
+	}
+	
 	public TagNac(String n,String t,String v,String[] a){
 		super(n,t,v);
 		tags = new ArrayList<>();
@@ -41,8 +46,8 @@ public class TagNac extends Nac{
 				list = json.getString("tags");
 			}
 			catch(JSONException ex){
-				ex.printStackTrace();
-				echo("list:"+list,10);
+				//ex.printStackTrace();
+				echo("list:"+list,8);
 			}
 		}
 		else
@@ -75,6 +80,24 @@ public class TagNac extends Nac{
 		return tags.contains(t);
 	}
 	
+	public void setTags(String t){
+		tags = new ArrayList<>();
+		for(String l:t.split(";")){
+			tags.add(l);
+		}
+	}
+	
+	public String getTags(){
+		String t = "";
+		for(String l:tags){
+			t+= ";"+l;
+		}
+		if(t.length() == 0)
+			return "";
+		else
+			return t.substring(1);
+	}
+	
 	public int tagCount(){
 		return tags.size();
 	}
@@ -97,17 +120,17 @@ public class TagNac extends Nac{
 	public boolean equals(Object o)
 	{
 		if(!(o instanceof TagNac)){
-			echo("Not a TagNac",1);
+			echo("Not a TagNac",10);
 			return false;
 		}
 		TagNac c = (TagNac)o;
 		if(c.tagCount() != tags.size()){
-			echo("Tag array size unmatched:"+tags.size()+"]["+c.tagCount(),1);
+			echo("Tag array size unmatched:"+tags.size()+"]["+c.tagCount(),10);
 			return false;
 		}
 		for(String t:tags){
 			if(!c.hasTag(t)){
-				echo("Unmatched tag",1);
+				echo("Unmatched tag",10);
 				return false;
 			}
 		}
